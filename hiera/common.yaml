@@ -1,0 +1,250 @@
+######### OpenStack Havana Configuration
+
+havana::region: 'RegionOne'
+havana::cloud_controller: '10.0.0.61'
+
+######## Users
+
+havana::users:
+  nova:
+    uid: 999
+    gid: 999
+  glance:
+    uid: 998
+    gid: 998
+  keystone:
+    uid: 997
+    gid: 997
+  cinder:
+    uid: 996
+    gid: 996
+  swift:
+    uid: 995
+    gid: 995
+  neutron:
+    uid: 994
+    gid: 994
+
+######## Networking
+
+havana::network::external: '10.0.0.0/24'
+havana::network::external::device: 'eth0'
+
+havana::network::internal: '10.0.0.0/24'
+havana::network::internal::device: 'eth0'
+
+havana::network::management: '10.0.0.0/24'
+havana::network::management::device: 'eth0'
+
+######## MySQL
+
+havana::mysql::root_password: 'password'
+havana::mysql::allowed_hosts: ['127.0.0.%', '10.0.0.%']
+
+######## RabbitMQ
+
+havana::rabbitmq::userid:   'nova'
+havana::rabbitmq::password: 'password'
+
+######## Keystone
+
+havana::keystone::mysql::password: 'password'
+havana::keystone::admin::password: 'password'
+havana::keystone::settings:
+  'DEFAULT/admin_token': 'password'
+  'DEFAULT/verbose': true
+  'DEFAULT/debug': true
+  'DEFAULT/use_syslog': true
+  'DEFAULT/syslog_log_facility': 'LOG_LOCAL2'
+  'DEFAULT/log_file': 'keystone.log'
+  'DEFAULT/log_dir': '/var/log/keystone'
+  'DEFAULT/log_config': '/etc/keystone/logging.conf'
+  'sql/connection': "mysql://keystone:%{hiera('havana::keystone::mysql::password')}@%{hiera('havana::cloud_controller')}/keystone"
+  'identity/driver': 'keystone.identity.backends.sql.Identity'
+  'catalog/driver': 'keystone.catalog.backends.templated.TemplatedCatalog'
+  'catalog/template_file': '/etc/keystone/default_catalog.templates'
+  'token/driver': 'keystone.token.backends.memcache.Token'
+  'policy/driver': 'keystone.policy.backends.rules.Policy'
+  'ec2/driver': 'keystone.contrib.ec2.backends.sql.Ec2'
+  'signing/token_format': 'UUID'
+
+######## Glance
+
+havana::glance::mysql::password: 'password'
+havana::glance::keystone::password: 'password'
+havana::glance::api::settings:
+  'DEFAULT/verbose': true
+  'DEFAULT/debug': true
+  'DEFAULT/log_dir': '/var/log/glance'
+  'DEFAULT/log_file': '/var/log/glance/api.log'
+  'DEFAULT/default_store': 'file'
+  'DEFAULT/use_syslog': true
+  'DEFAULT/syslog_log_facility': 'LOG_LOCAL1'
+  'DEFAULT/backlog': 4096
+  'DEFAULT/workers': "%{::processorcount}"
+  'DEFAULT/image_cache_dir': '/var/lib/glance/image-cache/'
+  'DEFAULT/sql_connection': "mysql://glance:%{hiera('havana::glance::mysql::password')}@%{hiera('havana::cloud_controller')}/glance"
+  'keystone_authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
+  'keystone_authtoken/auth_port': 35357
+  'keystone_authtoken/auth_protocol': 'http'
+  'keystone_authtoken/admin_tenant_name': 'services'
+  'keystone_authtoken/admin_user': 'glance'
+  'keystone_authtoken/admin_password': "%{hiera('havana::glance::keystone::password')}"
+  'paste_deploy/flavor': 'keystone'
+havana::glance::cache::settings:
+  'DEFAULT/use_syslog': true
+  'DEFAULT/syslog_log_facility': 'LOG_LOCAL1'
+  'DEFAULT/log_dir': '/var/log/glance'
+  'DEFAULT/log_file': '/var/log/glance/cache.log'
+  'DEFAULT/image_cache_dir': '/var/lib/glance/image-cache/'
+  'DEFAULT/filesystem_store_datadir': '/var/lib/glance/images/'
+  'DEFAULT/auth_url': "http://%{hiera('havana::cloud_controller')}:5000/v2.0/"
+  'DEFAULT/admin_tenant_name': 'services'
+  'DEFAULT/admin_user': 'glance'
+  'DEFAULT/admin_password': "%{hiera('havana::glance::keystone::password')}"
+havana::glance::registry::settings:
+  'DEFAULT/use_syslog': true
+  'DEFAULT/syslog_log_facility': 'LOG_LOCAL1'
+  'DEFAULT/log_dir': '/var/log/glance'
+  'DEFAULT/log_file': '/var/log/glance/registry.log'
+  'DEFAULT/backlog': 4096
+  'DEFAULT/limit_param_default': 25
+  'DEFAULT/sql_connection': "mysql://glance:%{hiera('havana::glance::mysql::password')}@%{hiera('havana::cloud_controller')}/glance"
+  'keystone_authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
+  'keystone_authtoken/auth_port': '35357'
+  'keystone_authtoken/auth_protocol': 'http'
+  'keystone_authtoken/admin_tenant_name': 'services'
+  'keystone_authtoken/admin_user': 'glance'
+  'keystone_authtoken/admin_password': "%{hiera('havana::glance::keystone::password')}"
+  'paste_deploy/flavor': 'keystone'
+
+######## Cinder
+
+havana::cinder::mysql::password: 'password'
+havana::cinder::keystone::password: 'password'
+havana::cinder::settings:
+  'DEFAULT/debug':                true
+  'DEFAULT/verbose':              true
+  'DEFAULT/use_syslog':           true
+  'DEFAULT/syslog_log_facility':  'LOG_LOCAL3'
+  'DEFAULT/state_path':           '/var/lib/cinder'
+  'DEFAULT/log_dir':              '/var/log/cinder'
+  'DEFAULT/rootwrap_config':      '/etc/cinder/rootwrap.conf'
+  'DEFAULT/api_paste_config':     '/etc/cinder/api-paste.ini'
+  'DEFAULT/auth_strategy':        'keystone'
+  'DEFAULT/volumes_dir':          '/var/lib/cinder/volumes'
+  'DEFAULT/rabbit_host':          "%{hiera('havana::cloud_controller')}"
+  'DEFAULT/rabbit_userid':        "%{hiera('havana::rabbitmq::userid')}"
+  'DEFAULT/rabbit_password':      "%{hiera('havana::rabbitmq::password')}"
+  'DEFAULT/sql_connection':       "mysql://cinder:%{hiera('havana::cinder::mysql::password')}@%{hiera('havana::cloud_controller')}/cinder"
+  'DEFAULT/glance_host':          "%{hiera('havana::cloud_controller')}"
+  'DEFAULT/volumes_dir':          '/var/lib/cinder/volumes'
+havana::cinder::keystone::settings:
+  'filter:authtoken/auth_host':         "%{hiera('havana::cloud_controller')}"
+  'filter:authtoken/auth_port':         '35357'
+  'filter:authtoken/auth_protocol':     'http'
+  'filter:authtoken/admin_tenant_name': 'services'
+  'filter:authtoken/admin_user':        'cinder'
+  'filter:authtoken/admin_password':    "%{hiera('havana::cinder::keystone::password')}"
+
+######## Nova
+
+havana::nova::mysql::password: 'password'
+havana::nova::keystone::password: 'password'
+havana::nova::compute::libvirt_type: 'qemu'
+havana::nova::settings:
+  'DEFAULT/verbose': true
+  'DEFAULT/debug': true
+  'DEFAULT/use_syslog': true
+  'DEFAULT/syslog_log_facility': 'LOG_LOCAL0'
+  'DEFAULT/log_dir': '/var/log/nova'
+  'DEFAULT/state_path': '/var/lib/nova'
+  'DEFAULT/lock_path': '/var/lock/nova'
+  'DEFAULT/auth_strategy': 'keystone'
+  'DEFAULT/rootwrap_config': '/etc/nova/rootwrap.conf'
+  'DEFAULT/glance_api_servers': "%{hiera('havana::cloud_controller')}:9292"
+  'DEFAULT/api_paste_config': '/etc/nova/api-paste.ini'
+  'DEFAULT/sql_connection': "mysql://nova:%{hiera('havana::nova::mysql::password')}@%{hiera('havana::cloud_controller')}/nova"
+  'DEFAULT/rabbit_host': "%{hiera('havana::cloud_controller')}"
+  'DEFAULT/rabbit_userid': "%{hiera('havana::rabbitmq::userid')}"
+  'DEFAULT/rabbit_password': "%{hiera('havana::rabbitmq::password')}"
+  'DEFAULT/novncproxy_base_url': "http://%{hiera('havana::cloud_controller')}:6080/vnc_auto.html"
+  'DEFAULT/instance_usage_audit_period': 'hour'
+  'DEFAULT/instance_usage_audit': true
+  'DEFAULT/service_neutron_metadata_proxy': true
+  'DEFAULT/neutron_metadata_proxy_shared_secret': 'password'
+  'DEFAULT/network_api_class': 'nova.network.neutronv2.api.API'
+  'DEFAULT/neutron_admin_username': 'neutron'
+  'DEFAULT/neutron_admin_password': "%{hiera('havana::neutron::keystone::password')}"
+  'DEFAULT/neutron_admin_auth_url': "http://%{hiera('havana::cloud_controller')}:35357/v2.0/"
+  'DEFAULT/neutron_admin_tenant_name': 'services'
+  'DEFAULT/neutron_url': "http://%{hiera('havana::cloud_controller')}:9696/"
+  'DEFAULT/libvirt_vif_driver': 'nova.virt.libvirt.vif.LibvirtHybridOVSBridgeDriver'
+  'DEFAULT/firewall_driver': 'nova.virt.firewall.NoopFirewallDriver'
+  'DEFAULT/security_group_api': 'neutron'
+  'DEFAULT/neutron_ovs_bridge': 'br-int'
+  'DEFAULT/neutron_region_name': 'RegionOne'
+  'DEFAULT/connection_type': 'libvirt'
+  'DEFAULT/compute_driver': 'libvirt.LibvirtDriver'
+  'DEFAULT/vncserver_listen': '0.0.0.0'
+havana::nova::keystone::settings:
+  'filter:authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
+  'filter:authtoken/auth_port': 35357
+  'filter:authtoken/auth_protocol': 'http'
+  'filter:authtoken/admin_tenant_name': 'services'
+  'filter:authtoken/admin_user': 'nova'
+  'filter:authtoken/admin_password': "%{hiera('havana::nova::keystone::password')}"
+
+######## Neutron
+
+havana::neutron::mysql::password: 'password'
+havana::neutron::keystone::password: 'password'
+havana::neutron::settings:
+  'DEFAULT/debug': true
+  'DEFAULT/verbose': true
+  'DEFAULT/state_path': '/var/lib/neutron'
+  'DEFAULT/lock_path': '$state_path/lock'
+  'DEFAULT/core_plugin': 'neutron.plugins.openvswitch.ovs_neutron_plugin.OVSNeutronPluginV2'
+  'DEFAULT/rabbit_host': "%{hiera('havana::cloud_controller')}"
+  'DEFAULT/rabbit_userid': "%{hiera('havana::rabbitmq::userid')}"
+  'DEFAULT/rabbit_password': "%{hiera('havana::rabbitmq::password')}"
+  'DEFAULT/notification_driver': 'neutron.openstack.common.notifier.rpc_notifier'
+  'database/connection': "mysql://neutron:%{hiera('havana::neutron::mysql::password')}@%{hiera('havana::cloud_controller')}/neutron"
+  'agent/root_helper': 'sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf'
+  'keystone_authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
+  'keystone_authtoken/auth_port': '35357'
+  'keystone_authtoken/auth_protocol': 'http'
+  'keystone_authtoken/admin_tenant_name': 'services'
+  'keystone_authtoken/admin_user': 'neutron'
+  'keystone_authtoken/admin_password': 'password'
+  'keystone_authtoken/signing_dir': '$state_path/keystone-signing'
+havana::neutron::keystone::settings:
+  'filter:authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
+  'filter:authtoken/auth_port': '35357'
+  'filter:authtoken/auth_protocol': 'http'
+  'filter:authtoken/admin_tenant_name': 'services'
+  'filter:authtoken/admin_user': 'neutron'
+  'filter:authtoken/admin_password': "%{hiera('havana::neutron::keystone::password')}"
+havana::neutron::dhcp::settings:
+  'DEFAULT/interface_driver': 'neutron.agent.linux.interface.OVSInterfaceDriver'
+  'DEFAULT/dhcp_driver': 'neutron.agent.linux.dhcp.Dnsmasq'
+  'DEFAULT/use_namespaces': 'false'
+havana::neutron::l3::settings:
+  'DEFAULT/debug': true
+  'DEFAULT/interface_driver': 'neutron.agent.linux.interface.OVSInterfaceDriver'
+  'DEFAULT/use_namespaces': 'false'
+  'DEFAULT/router_id': ''
+havana::neutron::metadata::settings:
+  'DEFAULT/debug': true
+  'DEFAULT/auth_url': "http://%{hiera('havana::cloud_controller')}:5000/v2.0"
+  'DEFAULT/auth_region': 'RegionOne'
+  'DEFAULT/admin_tenant_name': 'services'
+  'DEFAULT/admin_user': 'neutron'
+  'DEFAULT/admin_password': "%{hiera('havana::neutron::keystone::password')}"
+  'DEFAULT/nova_metadata_ip': "%{hiera('havana::cloud_controller')}"
+  'DEFAULT/metadata_proxy_shared_secret': 'password'
+havana::neutron::plugins::ovs::settings:
+  'ovs/tenant_network_type': 'vxlan'
+  'ovs/enable_tunneling': true
+  'ovs/tunnel_type': 'vxlan'
+  'ovs/tunnel_id_ranges': '1:1000'
