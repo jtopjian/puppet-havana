@@ -123,29 +123,29 @@ havana::glance::registry::settings:
 havana::cinder::mysql::password: 'password'
 havana::cinder::keystone::password: 'password'
 havana::cinder::settings:
-  'DEFAULT/debug':                true
-  'DEFAULT/verbose':              true
-  'DEFAULT/use_syslog':           true
-  'DEFAULT/syslog_log_facility':  'LOG_LOCAL3'
-  'DEFAULT/state_path':           '/var/lib/cinder'
-  'DEFAULT/log_dir':              '/var/log/cinder'
-  'DEFAULT/rootwrap_config':      '/etc/cinder/rootwrap.conf'
-  'DEFAULT/api_paste_config':     '/etc/cinder/api-paste.ini'
-  'DEFAULT/auth_strategy':        'keystone'
-  'DEFAULT/volumes_dir':          '/var/lib/cinder/volumes'
-  'DEFAULT/rabbit_host':          "%{hiera('havana::cloud_controller')}"
-  'DEFAULT/rabbit_userid':        "%{hiera('havana::rabbitmq::userid')}"
-  'DEFAULT/rabbit_password':      "%{hiera('havana::rabbitmq::password')}"
-  'DEFAULT/sql_connection':       "mysql://cinder:%{hiera('havana::cinder::mysql::password')}@%{hiera('havana::cloud_controller')}/cinder"
-  'DEFAULT/glance_host':          "%{hiera('havana::cloud_controller')}"
-  'DEFAULT/volumes_dir':          '/var/lib/cinder/volumes'
+  'DEFAULT/debug': true
+  'DEFAULT/verbose': true
+  'DEFAULT/use_syslog': true
+  'DEFAULT/syslog_log_facility': 'LOG_LOCAL3'
+  'DEFAULT/state_path': '/var/lib/cinder'
+  'DEFAULT/log_dir': '/var/log/cinder'
+  'DEFAULT/rootwrap_config': '/etc/cinder/rootwrap.conf'
+  'DEFAULT/api_paste_config': '/etc/cinder/api-paste.ini'
+  'DEFAULT/auth_strategy': 'keystone'
+  'DEFAULT/volumes_dir': '/var/lib/cinder/volumes'
+  'DEFAULT/rabbit_host': "%{hiera('havana::cloud_controller')}"
+  'DEFAULT/rabbit_userid': "%{hiera('havana::rabbitmq::userid')}"
+  'DEFAULT/rabbit_password': "%{hiera('havana::rabbitmq::password')}"
+  'DEFAULT/sql_connection': "mysql://cinder:%{hiera('havana::cinder::mysql::password')}@%{hiera('havana::cloud_controller')}/cinder"
+  'DEFAULT/glance_host': "%{hiera('havana::cloud_controller')}"
+  'DEFAULT/volumes_dir': '/var/lib/cinder/volumes'
 havana::cinder::keystone::settings:
-  'filter:authtoken/auth_host':         "%{hiera('havana::cloud_controller')}"
-  'filter:authtoken/auth_port':         '35357'
-  'filter:authtoken/auth_protocol':     'http'
+  'filter:authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
+  'filter:authtoken/auth_port': '35357'
+  'filter:authtoken/auth_protocol': 'http'
   'filter:authtoken/admin_tenant_name': 'services'
-  'filter:authtoken/admin_user':        'cinder'
-  'filter:authtoken/admin_password':    "%{hiera('havana::cinder::keystone::password')}"
+  'filter:authtoken/admin_user': 'cinder'
+  'filter:authtoken/admin_password': "%{hiera('havana::cinder::keystone::password')}"
 
 ######## Nova
 
