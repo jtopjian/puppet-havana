@@ -1,5 +1,9 @@
 forge 'http://forge.puppetlabs.com'
 
+mod 'cubbystack',
+  :git => 'https://github.com/jtopjian/puppet-cubbystack',
+  :ref => '0.9.0'
+
 mod 'apache',
   :git => 'https://github.com/puppetlabs/puppetlabs-apache',
   :ref => '5dc98116c7793c2ef21a158463eea7d62ecfdbd1'
