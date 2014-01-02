@@ -19,6 +19,34 @@ class havana::profiles::controller::mysql {
   class { 'mysql::server::account_security': }
   class { 'mysql::bindings::python': }
 
-  Cubbystack::Functions::Create_mysql_db<<||>>
+  cubbystack::functions::create_mysql_db { 'keystone':
+    user          => 'keystone',
+    password      => hiera('havana::keystone::mysql::password'),
+    allowed_hosts => hiera('havana::mysql::allowed_hosts'),
+  }
+
+  cubbystack::functions::create_mysql_db { 'glance':
+    user          => 'glance',
+    password      => hiera('havana::glance::mysql::password'),
+    allowed_hosts => hiera('havana::mysql::allowed_hosts'),
+  }
+
+  cubbystack::functions::create_mysql_db { 'cinder':
+    user          => 'cinder',
+    password      => hiera('havana::cinder::mysql::password'),
+    allowed_hosts => hiera('havana::mysql::allowed_hosts'),
+  }
+
+  cubbystack::functions::create_mysql_db { 'nova':
+    user          => 'nova',
+    password      => hiera('havana::nova::mysql::password'),
+    allowed_hosts => hiera('havana::mysql::allowed_hosts'),
+  }
+
+  cubbystack::functions::create_mysql_db { 'neutron':
+    user          => 'neutron',
+    password      => hiera('havana::neutron::mysql::password'),
+    allowed_hosts => hiera('havana::mysql::allowed_hosts'),
+  }
 
 }

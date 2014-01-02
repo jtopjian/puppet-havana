@@ -1,15 +1,16 @@
 class havana::roles::controller {
 
-  include cubbystack::repo
-  include havana::users
-  include havana::profiles::controller::memcached
-  include havana::profiles::controller::mysql
-  include havana::profiles::controller::rabbitmq
-  include havana::profiles::controller::keystone
-  include havana::profiles::controller::glance
-  include havana::profiles::controller::cinder
-  include havana::profiles::controller::nova
-  include havana::profiles::controller::neutron
-  include havana::profiles::controller::horizon
+  class { 'cubbystack::repo': } ->
+  class { 'havana::users': } ->
+  class { 'havana::profiles::controller::memcached': } ->
+  class { 'havana::profiles::controller::mysql': } ->
+  class { 'havana::profiles::controller::rabbitmq': } ->
+  class { 'havana::profiles::controller::keystone': } ->
+  class { 'havana::profiles::controller::glance': } ->
+  class { 'havana::profiles::controller::nova': } ->
+  class { 'havana::profiles::controller::cinder': } ->
+  class { 'havana::profiles::controller::neutron': } ->
+  class { 'havana::profiles::controller::horizon': }
+
 
 }

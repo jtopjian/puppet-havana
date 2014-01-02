@@ -1,12 +1,9 @@
 class havana::profiles::controller::horizon {
 
-  include cubbystack::horizon
+  anchor { 'havana::profiles::controller::horizon': }
+  Class { require => Anchor['havana::profiles::controller::horizon'] }
 
-  # Packages required by Horizon
-  $horizon_packages = ['python-django', 'python-compressor', 'python-appconf', 'python-cloudfiles', 'python-tz', 'node-less']
-  package { $horizon_packages:
-    ensure => latest,
-  }
+  class { 'cubbystack::horizon': }
 
   file_line { 'horizon root url':
     path    => '/etc/apache2/conf.d/openstack-dashboard.conf',

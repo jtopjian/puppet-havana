@@ -1,7 +1,7 @@
 ######### OpenStack Havana Configuration
 
 havana::region: 'RegionOne'
-havana::cloud_controller: '10.0.0.61'
+havana::cloud_controller: '10.0.0.58'
 
 ######## Users
 
@@ -204,6 +204,7 @@ havana::neutron::settings:
   'DEFAULT/verbose': true
   'DEFAULT/state_path': '/var/lib/neutron'
   'DEFAULT/lock_path': '$state_path/lock'
+  'DEFAULT/allow_overlapping_ips': 'false'
   'DEFAULT/core_plugin': 'neutron.plugins.openvswitch.ovs_neutron_plugin.OVSNeutronPluginV2'
   'DEFAULT/rabbit_host': "%{hiera('havana::cloud_controller')}"
   'DEFAULT/rabbit_userid': "%{hiera('havana::rabbitmq::userid')}"
@@ -248,3 +249,6 @@ havana::neutron::plugins::ovs::settings:
   'ovs/enable_tunneling': true
   'ovs/tunnel_type': 'vxlan'
   'ovs/tunnel_id_ranges': '1:1000'
+  'ovs/local_ip': "%{::ipaddress_eth0}"
+  'agent/tunnel_types': 'vxlan'
+  'securitygroup/firewall_driver': 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver'
