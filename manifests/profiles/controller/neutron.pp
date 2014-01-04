@@ -2,12 +2,11 @@ class havana::profiles::controller::neutron {
   anchor { 'havana::profiles::controller::neutron': }
   Class { require => Anchor['havana::profiles::controller::neutron'] }
 
-  class { 'l23network': }
+  l2_ovs_bridge { 'br-int': ensure => present }
+  l2_ovs_bridge { 'br-ex': ensure => present }
 
-  l23network::l2::bridge { 'br-int': }
-  l23network::l2::bridge { 'br-ex': }
-
-  L23network::L2::Bridge<||> ~> Service<| tag == 'neutron' |>
+  L2_ovs_bridge<||> ~> Service<| tag == 'neutron' |>
+  Package<| tag == 'neutron' |> -> L2_ovs_bridge<||>
 
   class {
     'cubbystack::neutron':

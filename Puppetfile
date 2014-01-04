@@ -38,3 +38,6 @@ mod 'rabbitmq',
 
 mod 'l23network',
   :git => 'https://github.com/xenolog/l23network'
+
+mod 'qpid',
+  :git => 'https://github.com/dprince/puppet-qpid',

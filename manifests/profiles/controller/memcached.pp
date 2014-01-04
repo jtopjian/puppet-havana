@@ -7,9 +7,12 @@ class havana::profiles::controller::memcached {
     listen_ip => '127.0.0.1',
   }
 
-  #$packages = ['python-memcache']
-  #package { $packages:
-  #  ensure => latest,
-  #}
+  case $::operatingsystem {
+    'Ubuntu': {
+      package { 'python-memcache':
+        ensure => latest,
+      }
+    }
+  }
 
 }

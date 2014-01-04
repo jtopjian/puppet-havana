@@ -1,7 +1,17 @@
+########## Puppet Configuration
+
+######## Puppet agent
+
+puppet::agent::server:       'puppet.z.terrarum.net'
+puppet::agent::method:       'service'
+puppet::agent::report:       false
+puppet::agent::manage_repos: false
+
+
 ######### OpenStack Havana Configuration
 
 havana::region: 'RegionOne'
-havana::cloud_controller: '10.0.0.58'
+havana::cloud_controller: '10.0.0.41'
 
 ######## Users
 
@@ -58,7 +68,6 @@ havana::keystone::settings:
   'DEFAULT/syslog_log_facility': 'LOG_LOCAL2'
   'DEFAULT/log_file': 'keystone.log'
   'DEFAULT/log_dir': '/var/log/keystone'
-  'DEFAULT/log_config': '/etc/keystone/logging.conf'
   'sql/connection': "mysql://keystone:%{hiera('havana::keystone::mysql::password')}@%{hiera('havana::cloud_controller')}/keystone"
   'identity/driver': 'keystone.identity.backends.sql.Identity'
   'catalog/driver': 'keystone.catalog.backends.templated.TemplatedCatalog'
@@ -84,6 +93,7 @@ havana::glance::api::settings:
   'DEFAULT/workers': "%{::processorcount}"
   'DEFAULT/image_cache_dir': '/var/lib/glance/image-cache/'
   'DEFAULT/sql_connection': "mysql://glance:%{hiera('havana::glance::mysql::password')}@%{hiera('havana::cloud_controller')}/glance"
+  'DEFAULT/notifier_strategy': 'noop'
   'keystone_authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
   'keystone_authtoken/auth_port': 35357
   'keystone_authtoken/auth_protocol': 'http'
@@ -123,29 +133,29 @@ havana::glance::registry::settings:
 havana::cinder::mysql::password: 'password'
 havana::cinder::keystone::password: 'password'
 havana::cinder::settings:
-  'DEFAULT/debug': true
-  'DEFAULT/verbose': true
-  'DEFAULT/use_syslog': true
-  'DEFAULT/syslog_log_facility': 'LOG_LOCAL3'
-  'DEFAULT/state_path': '/var/lib/cinder'
-  'DEFAULT/log_dir': '/var/log/cinder'
-  'DEFAULT/rootwrap_config': '/etc/cinder/rootwrap.conf'
-  'DEFAULT/api_paste_config': '/etc/cinder/api-paste.ini'
-  'DEFAULT/auth_strategy': 'keystone'
-  'DEFAULT/volumes_dir': '/var/lib/cinder/volumes'
-  'DEFAULT/rabbit_host': "%{hiera('havana::cloud_controller')}"
-  'DEFAULT/rabbit_userid': "%{hiera('havana::rabbitmq::userid')}"
-  'DEFAULT/rabbit_password': "%{hiera('havana::rabbitmq::password')}"
-  'DEFAULT/sql_connection': "mysql://cinder:%{hiera('havana::cinder::mysql::password')}@%{hiera('havana::cloud_controller')}/cinder"
-  'DEFAULT/glance_host': "%{hiera('havana::cloud_controller')}"
-  'DEFAULT/volumes_dir': '/var/lib/cinder/volumes'
+  'DEFAULT/debug':                true
+  'DEFAULT/verbose':              true
+  'DEFAULT/use_syslog':           true
+  'DEFAULT/syslog_log_facility':  'LOG_LOCAL3'
+  'DEFAULT/state_path':           '/var/lib/cinder'
+  'DEFAULT/log_dir':              '/var/log/cinder'
+  'DEFAULT/rootwrap_config':      '/etc/cinder/rootwrap.conf'
+  'DEFAULT/api_paste_config':     '/etc/cinder/api-paste.ini'
+  'DEFAULT/auth_strategy':        'keystone'
+  'DEFAULT/volumes_dir':          '/var/lib/cinder/volumes'
+  'DEFAULT/rabbit_host':          "%{hiera('havana::cloud_controller')}"
+  'DEFAULT/rabbit_userid':        "%{hiera('havana::rabbitmq::userid')}"
+  'DEFAULT/rabbit_password':      "%{hiera('havana::rabbitmq::password')}"
+  'DEFAULT/sql_connection':       "mysql://cinder:%{hiera('havana::cinder::mysql::password')}@%{hiera('havana::cloud_controller')}/cinder"
+  'DEFAULT/glance_host':          "%{hiera('havana::cloud_controller')}"
+  'DEFAULT/volumes_dir':          '/var/lib/cinder/volumes'
 havana::cinder::keystone::settings:
-  'filter:authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
-  'filter:authtoken/auth_port': '35357'
-  'filter:authtoken/auth_protocol': 'http'
+  'filter:authtoken/auth_host':         "%{hiera('havana::cloud_controller')}"
+  'filter:authtoken/auth_port':         '35357'
+  'filter:authtoken/auth_protocol':     'http'
   'filter:authtoken/admin_tenant_name': 'services'
-  'filter:authtoken/admin_user': 'cinder'
-  'filter:authtoken/admin_password': "%{hiera('havana::cinder::keystone::password')}"
+  'filter:authtoken/admin_user':        'cinder'
+  'filter:authtoken/admin_password':    "%{hiera('havana::cinder::keystone::password')}"
 
 ######## Nova
 
@@ -165,14 +175,15 @@ havana::nova::settings:
   'DEFAULT/glance_api_servers': "%{hiera('havana::cloud_controller')}:9292"
   'DEFAULT/api_paste_config': '/etc/nova/api-paste.ini'
   'DEFAULT/sql_connection': "mysql://nova:%{hiera('havana::nova::mysql::password')}@%{hiera('havana::cloud_controller')}/nova"
+  'DEFAULT/rcp_backend': 'nova.openstack.common.rpc.impl_kombu'
   'DEFAULT/rabbit_host': "%{hiera('havana::cloud_controller')}"
   'DEFAULT/rabbit_userid': "%{hiera('havana::rabbitmq::userid')}"
   'DEFAULT/rabbit_password': "%{hiera('havana::rabbitmq::password')}"
   'DEFAULT/novncproxy_base_url': "http://%{hiera('havana::cloud_controller')}:6080/vnc_auto.html"
   'DEFAULT/instance_usage_audit_period': 'hour'
   'DEFAULT/instance_usage_audit': true
-  'DEFAULT/service_neutron_metadata_proxy': true
-  'DEFAULT/neutron_metadata_proxy_shared_secret': 'password'
+  #'DEFAULT/service_neutron_metadata_proxy': true
+  #'DEFAULT/neutron_metadata_proxy_shared_secret': 'password'
   'DEFAULT/network_api_class': 'nova.network.neutronv2.api.API'
   'DEFAULT/neutron_admin_username': 'neutron'
   'DEFAULT/neutron_admin_password': "%{hiera('havana::neutron::keystone::password')}"
@@ -186,6 +197,7 @@ havana::nova::settings:
   'DEFAULT/neutron_region_name': 'RegionOne'
   'DEFAULT/connection_type': 'libvirt'
   'DEFAULT/compute_driver': 'libvirt.LibvirtDriver'
+  'DEFAULT/libvirt_type': 'qemu'
   'DEFAULT/vncserver_listen': '0.0.0.0'
 havana::nova::keystone::settings:
   'filter:authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
@@ -206,10 +218,12 @@ havana::neutron::settings:
   'DEFAULT/lock_path': '$state_path/lock'
   'DEFAULT/allow_overlapping_ips': 'false'
   'DEFAULT/core_plugin': 'neutron.plugins.openvswitch.ovs_neutron_plugin.OVSNeutronPluginV2'
+  'DEFAULT/rpc_backend': 'neutron.openstack.common.rpc.impl_kombu'
   'DEFAULT/rabbit_host': "%{hiera('havana::cloud_controller')}"
   'DEFAULT/rabbit_userid': "%{hiera('havana::rabbitmq::userid')}"
   'DEFAULT/rabbit_password': "%{hiera('havana::rabbitmq::password')}"
   'DEFAULT/notification_driver': 'neutron.openstack.common.notifier.rpc_notifier'
+  'DEFAULT/auth_strategy': 'keystone'
   'database/connection': "mysql://neutron:%{hiera('havana::neutron::mysql::password')}@%{hiera('havana::cloud_controller')}/neutron"
   'agent/root_helper': 'sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf'
   'keystone_authtoken/auth_host': "%{hiera('havana::cloud_controller')}"

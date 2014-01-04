@@ -9,9 +9,9 @@ class havana::profiles::compute::nova {
 
   class { 'cubbystack::nova::compute': }
 
-  class { 'cubbystack::nova::compute::libvirt':
-    libvirt_type => hiera('havana::nova::compute::libvirt_type'),
-  }
+  #class { 'cubbystack::nova::compute::libvirt':
+  #  libvirt_type => hiera('havana::nova::compute::libvirt_type'),
+  #}
 
-  class { 'havana::profiles::compute::migration_support': }
+  #class { 'havana::profiles::compute::migration_support': }
 }
