@@ -2,7 +2,8 @@ class havana::roles::controller {
 
   class { 'cubbystack::repo': } ->
   class { 'cubbystack::utils': } ->
-  class { 'havana::users': } ->
+  class { 'havana::profiles::common::users': } ->
+  class { 'havana::profiles::common::ovs': } ->
   class { 'havana::profiles::controller::memcached': } ->
   class { 'havana::profiles::controller::mysql': } ->
   class { 'havana::profiles::controller::rabbitmq': } ->
@@ -12,6 +13,5 @@ class havana::roles::controller {
   class { 'havana::profiles::controller::cinder': } ->
   class { 'havana::profiles::controller::neutron': } ->
   class { 'havana::profiles::controller::horizon': }
-
 
 }

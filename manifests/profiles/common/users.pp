@@ -1,4 +1,4 @@
-class havana::users {
+class havana::profiles::common::users {
 
   $users = hiera('havana::users')
 

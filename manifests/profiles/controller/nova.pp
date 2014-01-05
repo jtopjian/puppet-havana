@@ -25,4 +25,14 @@ class havana::profiles::controller::nova {
     region               => hiera('havana::region'),
   }
 
+
+  ## Copy the prep file
+  file { '/root/prep.sh':
+    ensure => present,
+    owner  => 'root',
+    group  => 'root',
+    mode   => '0750',
+    source => 'puppet:///modules/havana/prep.sh',
+  }
+
 }

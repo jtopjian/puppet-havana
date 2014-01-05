@@ -5,8 +5,9 @@ class havana::profiles::controller::neutron {
   l2_ovs_bridge { 'br-int': ensure => present }
   l2_ovs_bridge { 'br-ex': ensure => present }
 
-  L2_ovs_bridge<||> ~> Service<| tag == 'neutron' |>
-  Package<| tag == 'neutron' |> -> L2_ovs_bridge<||>
+  Package['openvswitch-datapath-dkms'] ~> Service['openvswitch-switch']
+  Package['openvswitch-datapath-dkms'] -> L2_ovs_bridge<||>
+  L2_ovs_bridge<||> -> Service<| tag == 'neutron' |>
 
   class {
     'cubbystack::neutron':

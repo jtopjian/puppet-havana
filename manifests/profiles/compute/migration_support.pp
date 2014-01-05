@@ -5,8 +5,9 @@ class havana::profiles::compute::migration_support {
 
       # Ubuntu-specific, not Debian, due to upstart
       File_line {
-        path   => '/etc/libvirt/libvirtd.conf',
-        notify => Service['libvirt-bin'],
+        path    => '/etc/libvirt/libvirtd.conf',
+        notify  => Service['libvirt-bin'],
+        require => Package['libvirt-bin'],
       }
 
       file_line { '/etc/libvirt/libvirtd.conf listen_tls':
