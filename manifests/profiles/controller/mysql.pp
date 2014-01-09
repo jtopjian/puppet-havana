@@ -17,7 +17,6 @@ class havana::profiles::controller::mysql {
     }
   }
   class { 'mysql::server::account_security': }
-  class { 'mysql::bindings::python': }
 
   cubbystack::functions::create_mysql_db { 'keystone':
     user          => 'keystone',

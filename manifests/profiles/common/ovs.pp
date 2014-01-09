@@ -1,11 +1,7 @@
 class havana::profiles::common::ovs {
 
-  case $::operatingsystem {
-    'Ubuntu': {
-      $ovs_packages = ['openvswitch-common', 'openvswitch-switch', 'openvswitch-datapath-dkms']
-      $ovs_service = 'openvswitch-switch'
-    }
-  }
+   $ovs_packages = ['openvswitch']
+   $ovs_service  = 'openvswitch'
 
   package { 'openvswitch-datapath-dkms':
     name   => $ovs_packages,

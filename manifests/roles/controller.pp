@@ -6,7 +6,7 @@ class havana::roles::controller {
   class { 'havana::profiles::common::ovs': } ->
   class { 'havana::profiles::controller::memcached': } ->
   class { 'havana::profiles::controller::mysql': } ->
-  class { 'havana::profiles::controller::rabbitmq': } ->
+  class { 'qpid::server': } ->
   class { 'havana::profiles::controller::keystone': } ->
   class { 'havana::profiles::controller::glance': } ->
   class { 'havana::profiles::controller::nova': } ->

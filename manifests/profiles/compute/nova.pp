@@ -9,12 +9,12 @@ class havana::profiles::compute::nova {
 
   class { 'cubbystack::nova::compute': }
 
-  case $::operatingsystem {
-    'Ubuntu': {
-      class { 'cubbystack::nova::compute::libvirt':
-        libvirt_type => hiera('havana::nova::compute::libvirt_type'),
-      }
-    }
+  service { 'messagebus':
+    ensure => running,
+  }
+
+  service { 'libvirtd':
+    ensure => running,
   }
 
 }
