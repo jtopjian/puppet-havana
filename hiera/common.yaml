@@ -1,13 +1,3 @@
-########## Puppet Configuration
-
-######## Puppet agent
-
-puppet::agent::server:       'puppet.z.terrarum.net'
-puppet::agent::method:       'service'
-puppet::agent::report:       false
-puppet::agent::manage_repos: false
-
-
 ######### OpenStack Havana Configuration
 
 havana::region: 'RegionOne'
@@ -50,11 +40,6 @@ havana::network::management::device: 'eth0'
 
 havana::mysql::root_password: 'password'
 havana::mysql::allowed_hosts: ['127.0.0.%', '10.0.0.%']
-
-######## RabbitMQ
-
-havana::rabbitmq::userid:   'nova'
-havana::rabbitmq::password: 'password'
 
 ######## Keystone
 
@@ -143,9 +128,6 @@ havana::cinder::settings:
   'DEFAULT/api_paste_config':     '/etc/cinder/api-paste.ini'
   'DEFAULT/auth_strategy':        'keystone'
   'DEFAULT/volumes_dir':          '/var/lib/cinder/volumes'
-  'DEFAULT/rabbit_host':          "%{hiera('havana::cloud_controller')}"
-  'DEFAULT/rabbit_userid':        "%{hiera('havana::rabbitmq::userid')}"
-  'DEFAULT/rabbit_password':      "%{hiera('havana::rabbitmq::password')}"
   'DEFAULT/sql_connection':       "mysql://cinder:%{hiera('havana::cinder::mysql::password')}@%{hiera('havana::cloud_controller')}/cinder"
   'DEFAULT/glance_host':          "%{hiera('havana::cloud_controller')}"
   'DEFAULT/volumes_dir':          '/var/lib/cinder/volumes'
@@ -175,15 +157,12 @@ havana::nova::settings:
   'DEFAULT/glance_api_servers': "%{hiera('havana::cloud_controller')}:9292"
   'DEFAULT/api_paste_config': '/etc/nova/api-paste.ini'
   'DEFAULT/sql_connection': "mysql://nova:%{hiera('havana::nova::mysql::password')}@%{hiera('havana::cloud_controller')}/nova"
-  'DEFAULT/rcp_backend': 'nova.openstack.common.rpc.impl_kombu'
-  'DEFAULT/rabbit_host': "%{hiera('havana::cloud_controller')}"
-  'DEFAULT/rabbit_userid': "%{hiera('havana::rabbitmq::userid')}"
-  'DEFAULT/rabbit_password': "%{hiera('havana::rabbitmq::password')}"
+  'DEFAULT/qpid_hostname': "%{hiera('havana::cloud_controller')}"
   'DEFAULT/novncproxy_base_url': "http://%{hiera('havana::cloud_controller')}:6080/vnc_auto.html"
   'DEFAULT/instance_usage_audit_period': 'hour'
   'DEFAULT/instance_usage_audit': true
-  #'DEFAULT/service_neutron_metadata_proxy': true
-  #'DEFAULT/neutron_metadata_proxy_shared_secret': 'password'
+  'DEFAULT/service_neutron_metadata_proxy': true
+  'DEFAULT/neutron_metadata_proxy_shared_secret': 'password'
   'DEFAULT/network_api_class': 'nova.network.neutronv2.api.API'
   'DEFAULT/neutron_admin_username': 'neutron'
   'DEFAULT/neutron_admin_password': "%{hiera('havana::neutron::keystone::password')}"
@@ -218,12 +197,9 @@ havana::neutron::settings:
   'DEFAULT/lock_path': '$state_path/lock'
   'DEFAULT/allow_overlapping_ips': 'false'
   'DEFAULT/core_plugin': 'neutron.plugins.openvswitch.ovs_neutron_plugin.OVSNeutronPluginV2'
-  'DEFAULT/rpc_backend': 'neutron.openstack.common.rpc.impl_kombu'
-  'DEFAULT/rabbit_host': "%{hiera('havana::cloud_controller')}"
-  'DEFAULT/rabbit_userid': "%{hiera('havana::rabbitmq::userid')}"
-  'DEFAULT/rabbit_password': "%{hiera('havana::rabbitmq::password')}"
   'DEFAULT/notification_driver': 'neutron.openstack.common.notifier.rpc_notifier'
   'DEFAULT/auth_strategy': 'keystone'
+  'DEFAULT/qpid_hostname': "%{hiera('havana::cloud_controller')}"
   'database/connection': "mysql://neutron:%{hiera('havana::neutron::mysql::password')}@%{hiera('havana::cloud_controller')}/neutron"
   'agent/root_helper': 'sudo /usr/bin/neutron-rootwrap /etc/neutron/rootwrap.conf'
   'keystone_authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
