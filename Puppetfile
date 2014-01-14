@@ -38,3 +38,12 @@ mod 'rabbitmq',
 
 mod 'l23network',
   :git => 'https://github.com/xenolog/l23network'
+
+mod 'xinetd',
+  :git => 'https://github.com/puppetlabs/puppetlabs-xinetd'
+
+mod 'rsync',
+  :git => 'https://github.com/puppetlabs/puppetlabs-rsync'
+
+mod 'swift',
+  :git => 'https://github.com/stackforge/puppet-swift'
