@@ -2,6 +2,7 @@
 
 havana::region: 'RegionOne'
 havana::cloud_controller: '10.0.0.58'
+havana::swift_proxy: '10.0.0.41'
 
 ######## Users
 
@@ -252,3 +253,54 @@ havana::neutron::plugins::ovs::settings:
   'ovs/local_ip': "%{::ipaddress_eth0}"
   'agent/tunnel_types': 'vxlan'
   'securitygroup/firewall_driver': 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver'
+
+######## Swift
+
+# Swift settings
+havana::swift::swift_part_power: 10
+havana::swift::swift_replicas: 2
+havana::swift::swift_min_part_hours: 1
+havana::swift::disks:
+  - 'vdb'
+havana::swift::settings:
+  'swift-hash/swift_hash_path_prefix': 'foo'
+  'swift-hash/swift_hash_path_suffix': 'bar'
+havana::swift::account::settings:
+  'DEFAULT/devices': '/srv/node'
+  'DEFAULT/bind_port': 6002
+  'DEFAULT/mount_check': 'false'
+  'DEFAULT/user': 'swift'
+  'DEFAULT/log_facility': 'LOG_LOCAL2'
+  'DEFAULT/workers': 1
+  'pipeline:main/pipeline': 'recon account-server'
+  'app:account-server/use': 'egg:swift#account'
+  'account-replicator/concurrency': "%{::processorcount}"
+  'account-reaper/concurrency': "%{::processorcount}"
+  'filter:recon/use': 'egg:swift#recon'
+  'filter:recon/recon_cache_path':  '/var/cache/swift'
+havana::swift::container::settings:
+  'DEFAULT/devices': '/srv/node'
+  'DEFAULT/bind_port': 6001
+  'DEFAULT/mount_check': 'false'
+  'DEFAULT/user': 'swift'
+  'DEFAULT/log_facility': 'LOG_LOCAL2'
+  'DEFAULT/workers': 1
+  'DEFAULT/allowed_sync_hosts': '127.0.0.1'
+  'pipeline:main/pipeline': 'recon container-server'
+  'app:container-server/use': 'egg:swift#container'
+  'container-replicator/concurrency': "%{::processorcount}"
+  'container-updater/concurrency': "%{::processorcount}"
+  'filter:recon/use': 'egg:swift#recon'
+  'filter:recon/recon_cache_path':    '/var/cache/swift'
+havana::swift::object::settings:
+  'DEFAULT/devices': '/srv/node'
+  'DEFAULT/bind_port': 6000
+  'DEFAULT/mount_check': 'false'
+  'DEFAULT/user': 'swift'
+  'DEFAULT/log_facility': 'LOG_LOCAL2'
+  'DEFAULT/workers': 1
+  'pipeline:main/pipeline': 'recon object-server'
+  'app:object-server/use': 'egg:swift#object'
+  'object-replicator/concurrency': "%{::processorcount}"
+  'object-updater/concurrency': "%{::processorcount}"
+  'filter:recon/use': 'egg:swift#recon'

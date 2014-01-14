@@ -2,12 +2,12 @@ class havana::profiles::controller::neutron {
   anchor { 'havana::profiles::controller::neutron': }
   Class { require => Anchor['havana::profiles::controller::neutron'] }
 
-  class { 'l23network': }
+  l2_ovs_bridge { 'br-int': ensure => present }
+  l2_ovs_bridge { 'br-ex': ensure => present }
 
-  l23network::l2::bridge { 'br-int': }
-  l23network::l2::bridge { 'br-ex': }
-
-  L23network::L2::Bridge<||> ~> Service<| tag == 'neutron' |>
+  Package['openvswitch-datapath-dkms'] ~> Service['openvswitch-switch']
+  Package['openvswitch-datapath-dkms'] -> L2_ovs_bridge<||>
+  L2_ovs_bridge<||> -> Service<| tag == 'neutron' |>
 
   class {
     'cubbystack::neutron':
