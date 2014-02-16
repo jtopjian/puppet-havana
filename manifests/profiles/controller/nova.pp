@@ -19,10 +19,10 @@ class havana::profiles::controller::nova {
 
   ## Generate an openrc file
   cubbystack::functions::create_openrc { '/root/openrc':
-    keystone_host        => hiera('havana::cloud_controller'),
-    admin_password       => hiera('havana::keystone::admin::password'),
-    admin_tenant         => 'admin',
-    region               => hiera('havana::region'),
+    keystone_host  => hiera('havana::cloud_controller'),
+    admin_password => hiera('havana::keystone::admin::password'),
+    admin_tenant   => 'admin',
+    region         => hiera('havana::region'),
   }
 
   ## Copy the prep file
