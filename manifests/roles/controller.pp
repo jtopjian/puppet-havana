@@ -2,7 +2,6 @@ class havana::roles::controller {
 
   class { 'cubbystack::repo': } ->
   class { 'havana::profiles::common::users': } ->
-  class { 'havana::profiles::common::ovs': } ->
   class { 'havana::profiles::common::memcached': } ->
   class { 'havana::profiles::controller::mysql': } ->
   class { 'havana::profiles::controller::rabbitmq': } ->
