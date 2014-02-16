@@ -2,12 +2,12 @@ class havana::profiles::controller::neutron {
   anchor { 'havana::profiles::controller::neutron': }
   Class { require => Anchor['havana::profiles::controller::neutron'] }
 
-  l2_ovs_bridge { 'br-int': ensure => present }
-  l2_ovs_bridge { 'br-ex': ensure => present }
+  $internal_device = hiera('havana::network::internal::device')
+  $internal_address = getvar("ipaddress_${internal_device}")
 
-  Package['openvswitch-datapath-dkms'] ~> Service['openvswitch-switch']
-  Package['openvswitch-datapath-dkms'] -> L2_ovs_bridge<||>
-  L2_ovs_bridge<||> -> Service<| tag == 'neutron' |>
+  $linuxbridge_settings = hiera('havana::neutron::plugins::linuxbridge::settings')
+  $linuxbridge_settings['vxlan/local_ip'] = $internal_address
+
 
   class {
     'cubbystack::neutron':
@@ -20,8 +20,8 @@ class havana::profiles::controller::neutron {
       settings => hiera('havana::neutron::l3::settings');
     'cubbystack::neutron::metadata':
       settings => hiera('havana::neutron::metadata::settings');
-    'cubbystack::neutron::plugins::ovs':
-      settings => hiera('havana::neutron::plugins::ovs::settings');
+    'cubbystack::neutron::plugins::linuxbridge':
+      settings => $linuxbridge_settings;
     'cubbystack::neutron::server':;
   }
 
