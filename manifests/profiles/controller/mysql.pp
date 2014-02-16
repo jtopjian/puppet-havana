@@ -9,14 +9,14 @@ class havana::profiles::controller::mysql {
   $internal_address = getvar("ipaddress_${internal_device}")
 
   class { 'mysql::server':
-    root_password    => hiera('havana::mysql::root_password'),
-    override_options => {
+    root_password           => hiera('havana::mysql::root_password'),
+    remove_default_accounts => true,
+    override_options        => {
       'mysqld' => {
         'bind_address' => $internal_address,
       }
     }
   }
-  class { 'mysql::server::account_security': }
   class { 'mysql::bindings::python': }
 
   cubbystack::functions::create_mysql_db { 'keystone':
