@@ -62,6 +62,14 @@ class havana::profiles::controller::keystone {
     tag          => $region,
   }
 
+  cubbystack::functions::create_keystone_endpoint { "${region}/object-store":
+    public_url   => "http://${external_address}:8080/v1/AUTH_%(tenant_id)s",
+    admin_url    => "http://${external_address}:8080",
+    internal_url => "http://${internal_address}:8080/v1/AUTH_%(tenant_id)s",
+    service_name => 'OpenStack Object Storage Service',
+    tag          => $region,
+  }
+
   keystone_tenant { 'admin':
     ensure      => present,
     description => 'Admin Tenant',
@@ -106,6 +114,13 @@ class havana::profiles::controller::keystone {
 
   cubbystack::functions::create_keystone_user { 'neutron':
     password => hiera('havana::neutron::keystone::password'),
+    email    => 'root@localhost',
+    tenant   => 'services',
+    role     => 'admin',
+  }
+
+  cubbystack::functions::create_keystone_user { 'swift':
+    password => hiera('havana::swift::keystone::password'),
     email    => 'root@localhost',
     tenant   => 'services',
     role     => 'admin',

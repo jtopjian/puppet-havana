@@ -304,3 +304,33 @@ havana::swift::object::settings:
   'object-replicator/concurrency': "%{::processorcount}"
   'object-updater/concurrency': "%{::processorcount}"
   'filter:recon/use': 'egg:swift#recon'
+havana::swift::proxy::settings:
+  'DEFAULT/bind_port': '8080'
+  'DEFAULT/workers': "%{::processorcount}"
+  'DEFAULT/user': 'swift'
+  'DEFAULT/log_level': 'DEBUG'
+  'pipeline:main/pipeline': 'healthcheck cache staticweb authtoken keystone proxy-logging proxy-server'
+  'app:proxy-server/use': 'egg:swift#proxy'
+  'app:proxy-server/allow_account_management': true
+  'app:proxy-server/account_autocreate': true
+  'filter:cache/use': 'egg:swift#memcache'
+  'filter:cache/memcache_servers': '127.0.0.1:11211'
+  'filter:healthcheck/use': 'egg:swift#healthcheck'
+  'filter:proxy-logging/use': 'egg:swift#proxy_logging'
+  'filter:swift3/use': 'egg:swift3#swift3'
+  'filter:account_quotas/use': 'egg:swift#account_quotas'
+  'filter:container_quotas/use': 'egg:swift#container_quotas'
+  'filter:keystone/use': 'egg:swift#keystoneauth'
+  'filter:keystone/operator_roles': 'admin, Member, swiftoperator'
+  'filter:keystone/is_admin': true
+  'filter:keystone/cache': 'swift.cache'
+  'filter:staticweb/use': 'egg:swift#staticweb'
+  'filter:authtoken/signing_dir /etc/swift/keystone'
+  'filter:authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
+  'filter:authtoken/auth_port': '35357'
+  'filter:authtoken/auth_protocol': 'http'
+  'filter:authtoken/admin_tenant_name': 'services'
+  'filter:authtoken/admin_user': 'swift'
+  'filter:authtoken/admin_password': "%{hiera('havana::swift::keystone::password')}"
+  'filter:swift3/use': "egg:swift3#swift3"
+  'filter:proxy-logging/use': 'egg:swift#proxy_logging'

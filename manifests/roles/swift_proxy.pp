@@ -36,6 +36,4 @@ class havana::roles::swift_proxy {
     read_only       => true,
   }
 
-
-
 }
