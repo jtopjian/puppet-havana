@@ -5,15 +5,12 @@ class havana::profiles::controller::mysql {
 
   $allowed_hosts = hiera('havana::mysql::allowed_hosts')
 
-  $internal_device = hiera('havana::network::internal::device')
-  $internal_address = getvar("ipaddress_${internal_device}")
-
   class { 'mysql::server':
     root_password           => hiera('havana::mysql::root_password'),
     remove_default_accounts => true,
     override_options        => {
       'mysqld' => {
-        'bind_address' => $internal_address,
+        'bind_address' => '0.0.0.0',
       }
     }
   }
