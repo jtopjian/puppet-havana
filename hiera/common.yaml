@@ -201,12 +201,11 @@ havana::nova::keystone::settings:
 havana::neutron::mysql::password: 'password'
 havana::neutron::keystone::password: 'password'
 havana::neutron::settings:
-  'DEFAULT/debug': true
   'DEFAULT/verbose': true
   'DEFAULT/state_path': '/var/lib/neutron'
   'DEFAULT/lock_path': '$state_path/lock'
-  'DEFAULT/allow_overlapping_ips': 'false'
-  'DEFAULT/core_plugin': 'neutron.plugins.openvswitch.ovs_neutron_plugin.OVSNeutronPluginV2'
+  'DEFAULT/allow_overlapping_ips': 'true'
+  'DEFAULT/core_plugin': 'neutron.plugins.ml2.plugin.Ml2Plugin'
   'DEFAULT/rabbit_host': "%{hiera('havana::cloud_controller')}"
   'DEFAULT/rabbit_userid': "%{hiera('havana::rabbitmq::userid')}"
   'DEFAULT/rabbit_password': "%{hiera('havana::rabbitmq::password')}"
@@ -228,16 +227,13 @@ havana::neutron::keystone::settings:
   'filter:authtoken/admin_user': 'neutron'
   'filter:authtoken/admin_password': "%{hiera('havana::neutron::keystone::password')}"
 havana::neutron::dhcp::settings:
-  'DEFAULT/interface_driver': 'neutron.agent.linux.interface.OVSInterfaceDriver'
+  'DEFAULT/interface_driver': 'neutron.agent.linux.interface.BridgeInterfaceDriver'
   'DEFAULT/dhcp_driver': 'neutron.agent.linux.dhcp.Dnsmasq'
-  'DEFAULT/use_namespaces': 'false'
+  'DEFAULT/use_namespaces': 'true'
 havana::neutron::l3::settings:
-  'DEFAULT/debug': true
-  'DEFAULT/interface_driver': 'neutron.agent.linux.interface.OVSInterfaceDriver'
-  'DEFAULT/use_namespaces': 'false'
-  'DEFAULT/router_id': ''
+  'DEFAULT/interface_driver': 'neutron.agent.linux.interface.BridgeInterfaceDriver'
+  'DEFAULT/use_namespaces': 'true'
 havana::neutron::metadata::settings:
-  'DEFAULT/debug': true
   'DEFAULT/auth_url': "http://%{hiera('havana::cloud_controller')}:5000/v2.0"
   'DEFAULT/auth_region': 'RegionOne'
   'DEFAULT/admin_tenant_name': 'services'
@@ -245,14 +241,13 @@ havana::neutron::metadata::settings:
   'DEFAULT/admin_password': "%{hiera('havana::neutron::keystone::password')}"
   'DEFAULT/nova_metadata_ip': "%{hiera('havana::cloud_controller')}"
   'DEFAULT/metadata_proxy_shared_secret': 'password'
-havana::neutron::plugins::ovs::settings:
-  'ovs/tenant_network_type': 'vxlan'
-  'ovs/enable_tunneling': true
-  'ovs/tunnel_type': 'vxlan'
-  'ovs/tunnel_id_ranges': '1:1000'
-  'ovs/local_ip': "%{::ipaddress_eth0}"
-  'agent/tunnel_types': 'vxlan'
-  'securitygroup/firewall_driver': 'neutron.agent.linux.iptables_firewall.OVSHybridIptablesFirewallDriver'
+havana::neutron::plugins::linuxbridge::settings:
+  'ml2/type_drivers': 'vxlan'
+  'ml2/mechanism_drivers': 'linuxbridge'
+  'ml2/tenant_network_types': 'vxlan'
+  'ml2_type_vxlan/vni_ranges': '1:1000'
+  'securitygroup/firewall_driver': 'neutron.agent.linux.iptables_firewall.IptablesFirewallDriver'
+  'vxlan/enable_vxlan': 'true'
 
 ######## Swift
 

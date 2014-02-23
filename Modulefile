@@ -1,5 +1,5 @@
 name 'jtopjian-havana'
-version '0.1.0'
+version '0.2.0'
 source 'https://github.com/jtopjian/puppet-havana'
 author 'Joe Topjian'
 license 'Apache License 2.0'
