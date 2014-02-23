@@ -10,7 +10,7 @@ class havana::profiles::controller::keystone {
   $internal_address = getvar("ipaddress_${internal_device}")
 
   class { 'cubbystack::keystone':
-    settings => hiera('havana::keystone::settings'),
+    settings => hiera_hash('havana::keystone::settings'),
   }
 
   $region = hiera('havana::region')

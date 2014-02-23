@@ -3,10 +3,10 @@ class havana::profiles::controller::cinder {
   Class { require => Anchor['havana::profiles::controller::cinder'] }
 
   class { 'cubbystack::cinder':
-    settings => hiera('havana::cinder::settings'),
+    settings => hiera_hash('havana::cinder::settings'),
   }
   class { 'cubbystack::cinder::keystone':
-    settings => hiera('havana::cinder::keystone::settings'),
+    settings => hiera_hash('havana::cinder::keystone::settings'),
   }
   class { 'cubbystack::cinder::api': }
   class { 'cubbystack::cinder::scheduler': }

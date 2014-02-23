@@ -18,6 +18,6 @@ class havana::profiles::swift::account {
   }
 
   class { 'cubbystack::swift::account':
-    settings => hiera('havana::swift::account::settings'),
+    settings => hiera_hash('havana::swift::account::settings'),
   }
 }

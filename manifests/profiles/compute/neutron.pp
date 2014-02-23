@@ -16,7 +16,7 @@ class havana::profiles::compute::neutron {
 
   class {
     'cubbystack::neutron':
-      settings => hiera('havana::neutron::settings');
+      settings => hiera_hash('havana::neutron::settings');
     'cubbystack::neutron::plugins::linuxbridge':
       settings => $linuxbridge_merged;
   }

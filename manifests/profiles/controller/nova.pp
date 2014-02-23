@@ -4,10 +4,10 @@ class havana::profiles::controller::nova {
   Class { require => Anchor['havana::profiles::controller::nova'] }
 
   class { 'cubbystack::nova':
-    settings => hiera('havana::nova::settings'),
+    settings => hiera_hash('havana::nova::settings'),
   }
   class { 'cubbystack::nova::keystone':
-    settings => hiera('havana::nova::keystone::settings'),
+    settings => hiera_hash('havana::nova::keystone::settings'),
   }
   class { 'cubbystack::nova::api': }
   class { 'cubbystack::nova::cert': }

@@ -18,7 +18,7 @@ class havana::profiles::swift::object {
   }
 
   class { 'cubbystack::swift::object':
-    settings => hiera('havana::swift::object::settings'),
+    settings => hiera_hash('havana::swift::object::settings'),
   }
 
 }

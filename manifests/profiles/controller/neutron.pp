@@ -15,15 +15,15 @@ class havana::profiles::controller::neutron {
 
   class {
     'cubbystack::neutron':
-      settings => hiera('havana::neutron::settings');
+      settings => hiera_hash('havana::neutron::settings');
     'cubbystack::neutron::keystone':
-      settings => hiera('havana::neutron::keystone::settings');
+      settings => hiera_hash('havana::neutron::keystone::settings');
     'cubbystack::neutron::dhcp':
-      settings => hiera('havana::neutron::dhcp::settings');
+      settings => hiera_hash('havana::neutron::dhcp::settings');
     'cubbystack::neutron::l3':
-      settings => hiera('havana::neutron::l3::settings');
+      settings => hiera_hash('havana::neutron::l3::settings');
     'cubbystack::neutron::metadata':
-      settings => hiera('havana::neutron::metadata::settings');
+      settings => hiera_hash('havana::neutron::metadata::settings');
     'cubbystack::neutron::plugins::linuxbridge':
       settings => $linuxbridge_merged;
     'cubbystack::neutron::server':;
