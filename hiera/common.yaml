@@ -28,14 +28,17 @@ havana::users:
 
 ######## Networking
 
-havana::network::external: '10.0.0.0/24'
-havana::network::external::device: 'eth0'
+network::external: '10.0.0.0/24'
+network::external::device: 'eth0'
+network::external::ip: "%{::ipaddress_eth0}"
 
-havana::network::internal: '10.0.0.0/24'
-havana::network::internal::device: 'eth0'
+network::internal: '10.0.0.0/24'
+network::internal::device: 'eth0'
+network::internal::ip: "%{::ipaddress_eth0}"
 
 havana::network::management: '10.0.0.0/24'
 havana::network::management::device: 'eth0'
+havana::network::management::ip: "%{::ipaddress_eth0}"
 
 ######## MySQL
 

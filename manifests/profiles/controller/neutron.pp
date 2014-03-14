@@ -2,15 +2,14 @@ class havana::profiles::controller::neutron {
   anchor { 'havana::profiles::controller::neutron': }
   Class { require => Anchor['havana::profiles::controller::neutron'] }
 
-  $internal_device = hiera('havana::network::internal::device')
-  $internal_address = getvar("ipaddress_${internal_device}")
-
-  $linuxbridge_settings = hiera_hash('havana::neutron::plugins::linuxbridge::settings')
+  # Get the Internal IP of the controller
+  $internal_address = hiera('network::internal::ip')
 
   # Determine the internal address for vxlan
   $vxlan = { 'vxlan/local_ip' => $internal_address }
 
   # merge the two settings
+  $linuxbridge_settings = hiera_hash('havana::neutron::plugins::linuxbridge::settings')
   $linuxbridge_merged = merge($linuxbridge_settings, $vxlan)
 
   # Fix default neutron config for ubuntu

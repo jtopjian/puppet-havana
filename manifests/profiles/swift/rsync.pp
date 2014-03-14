@@ -4,8 +4,7 @@ class havana::profiles::swift::rsync {
   Class { require => Anchor['havana::profiles::swift::rsync'] }
 
   # Determine the IP address
-  $interface = hiera('havana::network::internal::device')
-  $ip = getvar("ipaddress_${interface}")
+  $ip = hiera('network::internal::ip')
 
   class { 'rsync::server':
     use_xinetd => true,

@@ -4,8 +4,7 @@ class havana::roles::swift_node {
   Class { require => Anchor['havana::profiles::swift::node'] }
 
   # Determine the IP address
-  $interface = hiera('havana::network::internal::device')
-  $ip = getvar("ipaddress_${interface}")
+  $ip = hiera('network::internal::ip')
 
   $swift_disks = hiera('havana::swift::disks')
 

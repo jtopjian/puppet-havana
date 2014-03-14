@@ -3,17 +3,17 @@ class havana::profiles::controller::keystone {
   anchor { 'havana::profiles::controller::keystone': }
   Class { require => Anchor['havana::profiles::controller::keystone'] }
 
-  $external_device = hiera('havana::network::external::device')
-  $external_address = getvar("ipaddress_${external_device}")
+  # Get the External and Internal IPs for the Keystone endpoints
+  $external_address = hiera('network::external::ip')
+  $internal_address = hiera('network::internal::ip')
 
-  $internal_device = hiera('havana::network::internal::device')
-  $internal_address = getvar("ipaddress_${internal_device}")
+  # Get the Region
+  $region = hiera('havana::region')
 
   class { 'cubbystack::keystone':
     settings => hiera_hash('havana::keystone::settings'),
   }
 
-  $region = hiera('havana::region')
   cubbystack::functions::create_keystone_endpoint { "${region}/identity":
     public_url   => "http://${external_address}:5000/v2.0",
     admin_url    => "http://${external_address}:35357/v2.0",
