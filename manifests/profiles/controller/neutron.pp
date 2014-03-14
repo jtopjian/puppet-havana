@@ -26,8 +26,6 @@ class havana::profiles::controller::neutron {
   class {
     'cubbystack::neutron':
       settings => hiera_hash('havana::neutron::settings');
-    'cubbystack::neutron::keystone':
-      settings => hiera_hash('havana::neutron::keystone::settings');
     'cubbystack::neutron::dhcp':
       settings => hiera_hash('havana::neutron::dhcp::settings');
     'cubbystack::neutron::l3':

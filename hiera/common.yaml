@@ -143,13 +143,12 @@ havana::cinder::settings:
   'DEFAULT/sql_connection': "mysql://cinder:%{hiera('havana::cinder::mysql::password')}@%{hiera('havana::cloud_controller')}/cinder"
   'DEFAULT/glance_host': "%{hiera('havana::cloud_controller')}"
   'DEFAULT/volumes_dir': '/var/lib/cinder/volumes'
-havana::cinder::keystone::settings:
-  'filter:authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
-  'filter:authtoken/auth_port': '35357'
-  'filter:authtoken/auth_protocol': 'http'
-  'filter:authtoken/admin_tenant_name': 'services'
-  'filter:authtoken/admin_user': 'cinder'
-  'filter:authtoken/admin_password': "%{hiera('havana::cinder::keystone::password')}"
+  'keystone_authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
+  'keystone_authtoken/auth_port': '35357'
+  'keystone_authtoken/auth_protocol': 'http'
+  'keystone_authtoken/admin_tenant_name': 'services'
+  'keystone_authtoken/admin_user': 'cinder'
+  'keystone_authtoken/admin_password': "%{hiera('havana::cinder::keystone::password')}"
 
 ######## Nova
 
@@ -191,13 +190,12 @@ havana::nova::settings:
   'DEFAULT/connection_type': 'libvirt'
   'DEFAULT/compute_driver': 'libvirt.LibvirtDriver'
   'DEFAULT/vncserver_listen': '0.0.0.0'
-havana::nova::keystone::settings:
-  'filter:authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
-  'filter:authtoken/auth_port': 35357
-  'filter:authtoken/auth_protocol': 'http'
-  'filter:authtoken/admin_tenant_name': 'services'
-  'filter:authtoken/admin_user': 'nova'
-  'filter:authtoken/admin_password': "%{hiera('havana::nova::keystone::password')}"
+  'keystone_authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
+  'keystone_authtoken/auth_port': 35357
+  'keystone_authtoken/auth_protocol': 'http'
+  'keystone_authtoken/admin_tenant_name': 'services'
+  'keystone_authtoken/admin_user': 'nova'
+  'keystone_authtoken/admin_password': "%{hiera('havana::nova::keystone::password')}"
 
 ######## Neutron
 
@@ -222,13 +220,6 @@ havana::neutron::settings:
   'keystone_authtoken/admin_user': 'neutron'
   'keystone_authtoken/admin_password': 'password'
   'keystone_authtoken/signing_dir': '$state_path/keystone-signing'
-havana::neutron::keystone::settings:
-  'filter:authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
-  'filter:authtoken/auth_port': '35357'
-  'filter:authtoken/auth_protocol': 'http'
-  'filter:authtoken/admin_tenant_name': 'services'
-  'filter:authtoken/admin_user': 'neutron'
-  'filter:authtoken/admin_password': "%{hiera('havana::neutron::keystone::password')}"
 havana::neutron::dhcp::settings:
   'DEFAULT/interface_driver': 'neutron.agent.linux.interface.BridgeInterfaceDriver'
   'DEFAULT/dhcp_driver': 'neutron.agent.linux.dhcp.Dnsmasq'
