@@ -314,7 +314,7 @@ havana::swift::proxy::settings:
   'filter:keystone/is_admin': true
   'filter:keystone/cache': 'swift.cache'
   'filter:staticweb/use': 'egg:swift#staticweb'
-  'filter:authtoken/signing_dir /etc/swift/keystone'
+  'filter:authtoken/signing_dir': '/etc/swift/keystone'
   'filter:authtoken/auth_host': "%{hiera('havana::cloud_controller')}"
   'filter:authtoken/auth_port': '35357'
   'filter:authtoken/auth_protocol': 'http'
